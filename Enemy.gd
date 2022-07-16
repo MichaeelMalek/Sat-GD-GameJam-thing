@@ -6,6 +6,7 @@ onready var sprite = $AnimatedSprite
 
 var player_dir = ""
 var proximity = false
+var within = false
 
 func _ready():
 	pass
@@ -33,8 +34,9 @@ func _physics_process(delta):
 	
 	else:
 		sprite.play("Attack")
-#		if proximity:
-#			get_tree().change_scene("res://Game_Over.tscn")
+		if not sprite.is_playing() and within:
+			get_tree().change_scene("res://Game_Over.tscn")
+		proximity = false
 	
 	move_and_slide(loc,Vector2(0,-1))
 
@@ -53,7 +55,12 @@ func find_player_dir():
 func _on_Proximity_body_entered(body):
 	if body.name == "Player":
 		proximity = true
+		within = true
 
 func _on_Proximity_body_exited(body):
 	if body.name == "Player":
-		proximity = false
+		within = false
+
+
+func _on_AnimatedSprite_animation_finished():
+	pass # Replace with function body.
